@@ -1,0 +1,29 @@
+<apex:page controller="ControllerForGameVFPage">
+<apex:pageBlock title="Enter the characteristics for the heroes:" rendered="{!BlockFlag}" id="ViewEnterBlock">
+    <apex:outputPanel >
+        <apex:form >
+            <apex:pageBlockSection columns="4">
+                  For the Hero 1: Name <apex:inputText value="{!unit1.Name}"/>
+                  For the Hero 2: Name <apex:inputText value="{!unit2.Name}"/>
+                  HP <apex:inputText value="{!unit1.hp}"/>
+                  HP <apex:inputText value="{!unit2.hp}"/>
+                  Damage min <apex:inputText value="{!unit1.dmgMin}"/>
+                  Damage min <apex:inputText value="{!unit2.dmgMin}"/>
+                  Damage max <apex:inputText value="{!unit1.dmgMax}"/>
+                  Damage max <apex:inputText value="{!unit2.dmgMax}"/>      
+              <apex:commandButton action="{!fight}" value="FIGHT!"/>
+            </apex:pageBlockSection>
+        </apex:form>
+    </apex:outputPanel>
+</apex:pageBlock>
+<apex:pageBlock title="Winner" rendered="{!WinnerFlag}" id="ViewWinnerBlock">
+    <apex:outputPanel >
+        <apex:form >
+            <apex:pageBlockSection >
+                Name <apex:outputText value="{!winner.Name}"/>
+                HP is left <apex:outputText value="{!winner.hp}"/>
+            </apex:pageBlockSection>
+        </apex:form>
+    </apex:outputPanel>
+</apex:pageBlock>
+</apex:page>
