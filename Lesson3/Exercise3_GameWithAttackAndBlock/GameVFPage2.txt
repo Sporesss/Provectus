@@ -1,0 +1,74 @@
+<apex:page controller="ControllerForGameVFPage2">
+    <apex:sectionHeader title="Game" />
+        <apex:form >
+            <apex:pageBlock title="Create a New Unit">
+                <apex:pageBlockButtons location="bottom">
+                    <apex:commandButton action="{!newUnit}" value="NEW UNIT" reRender="listOfUnitsBlock"/>
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection title="Unit characteristics">
+                    <apex:inputField id="accountName" value="{!newUnit.Name}"/>
+                    <apex:inputField id="accounthp" value="{!newUnit.hp__c}"/>
+                    <apex:inputField id="accountdngmin" value="{!newUnit.dmgMin__c}"/>
+                    <apex:inputField id="accountdmgmax" value="{!newUnit.dmgMax__c}"/>
+                </apex:pageBlockSection>
+           </apex:pageBlock>
+        </apex:form>
+
+<apex:form >
+    <apex:pageBlock >
+        <apex:pageBlockSection title="You can select two LIVE units for fight:">
+            <apex:outputPanel id="listOfUnitsBlock">
+                <apex:pageBlockTable value="{!unitsList}" var="eachUnit">
+                    <apex:column >
+                        <apex:inputCheckbox value="{!eachUnit.selected}"/>
+                    </apex:column>
+                    <apex:column value="{!eachUnit.unit.Name}"/>
+                    <apex:column value="{!eachUnit.unit.hp__c}"/>
+                    <apex:column value="{!eachUnit.unit.dmgMin__c}"/>
+                    <apex:column value="{!eachUnit.unit.dmgMax__c}"/>
+                    <apex:column >
+                        <apex:facet name="header">Availability</apex:facet>
+                        <apex:outputText value="{!eachUnit.isLive}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:outputPanel>                
+                 <br/><apex:commandButton action="{!fight}" value="Auto-Fight"/>
+                 <apex:commandButton action="{!transitionToFightByStepBlock}" value="Fight by step"/>
+                 <apex:outputText value="You can select only TWO fighters! Check if they are LIVE and try again!" rendered="{!messageFlag}"/>
+        </apex:pageBlockSection>                    
+    </apex:pageBlock>
+</apex:form>
+
+<apex:pageBlock rendered="{!fightByStepFlag}">
+    <apex:form >
+        <apex:outputPanel id="FightByStepBlock">
+            <apex:pageBlockTable value="{!selectedUnits}" var="eachUnit">
+                <apex:column value="{!eachUnit.Name}"/>
+                <apex:column value="{!eachUnit.hp__c}"/>
+                <apex:column value="{!eachUnit.dmgMin__c}"/>
+                <apex:column value="{!eachUnit.dmgMax__c}"/>
+                <apex:column >
+                    <apex:facet name="header">Attack</apex:facet>
+                    <apex:inputField value="{!eachUnit.attack__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Block</apex:facet>
+                    <apex:inputField value="{!eachUnit.block__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:outputPanel>
+            <apex:commandButton action="{!fight2}" value="Manual fight"/>
+    </apex:form>                      
+</apex:pageBlock>
+   
+<apex:pageBlock title="Winner" rendered="{!WinnerFlag}" id="ViewWinnerBlock">
+    <apex:outputPanel >
+        <apex:form >
+            <apex:pageBlockSection >
+                Name <apex:outputText value="{!winner.Name}"/>
+                HP is left <apex:outputText value="{!winner.hp__c}"/>
+            </apex:pageBlockSection>
+        </apex:form>
+    </apex:outputPanel>
+</apex:pageBlock>
+</apex:page>
