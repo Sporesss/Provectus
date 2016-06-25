@@ -1,0 +1,16 @@
+<apex:page controller="ControllerForCompaniesAndWorkPeriod">  
+    <apex:pageBlock title="Work period information:">
+        <apex:pageBlockTable value="{!workPeriodList}" var="workPeriods">
+            <apex:column headerValue="Work period name" value="{!workPeriods.name}"/>
+            <apex:repeat value="{!accountList}" var="eachAccount">
+                <apex:column headerValue="{!eachAccount.name}">
+                    <apex:pageBlockTable value="{!workPeriods.Rate__r}" var="rate" 
+                        rendered="{!IF(workPeriods.Order__r.Account__r.Id==eachAccount.Id, true, false)}">
+                        <apex:column value="{!rate.Revenue__c}"/>
+                        <apex:column value="{!rate.Margin__c}"/>
+                    </apex:pageBlockTable>
+                </apex:column>
+            </apex:repeat>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>
