@@ -1,0 +1,47 @@
+trigger triggerOnNumberOfWins on Unit__c (before update, before insert) {
+	Map<Id, Unit__c> fightersMap = new Map <Id, Unit__c> ();
+    /** Update Units winrate. */
+    for (Unit__c unitWinrateUpdate : Trigger.new) {
+        if (unitWinrateUpdate.Quantity_of_fights__c != 0) {
+            unitWinrateUpdate.Winrate__c = unitWinrateUpdate.Number_of_wins__c / unitWinrateUpdate.Quantity_of_fights__c * 100;
+        }        
+    }
+    if (Trigger.isUpdate) {
+        for (Unit__c beforeUpdate : Trigger.old) {
+            /** If number of wins was changed  - sort units in bubble sort and set new position in rating for each Unit. */            
+            if (beforeUpdate.Number_of_wins__c != Trigger.newMap.get(beforeUpdate.Id).Number_of_wins__c) {
+                fightersMap.put(beforeUpdate.Id, Trigger.newMap.get(beforeUpdate.Id));
+            	List<Unit__c> notFightersList = [SELECT Id, Name, hp__c, dmgMin__c, dmgMax__c, attack__c, block__c, death_date__c, 
+                                 Number_of_wins__c, Position_in_rating__c FROM Unit__c WHERE Id NOT IN :fightersMap.keySet()];
+        		List<Unit__c> allUnitsList = new List<Unit__c> ();
+        		allUnitsList.addAll(notFightersList);
+        		allUnitsList.addAll(fightersMap.values());
+            
+        		/** Bubble sort by number of wins. */
+                for (Integer i = allUnitsList.size() - 1; i > 0; i--) {
+           			for(Integer j = 0; j < i; j++) {
+                		if(allUnitsList.get(j).Number_of_wins__c > allUnitsList.get(j + 1).Number_of_wins__c) {
+                    		Unit__c temp = allUnitsList.get(j);
+                    		allUnitsList.set(j, allUnitsList.get(j + 1));
+                    		allUnitsList.set(j + 1, temp);
+                		}
+            		}
+        		}		
+            	Set<Id> keysSet = fightersMap.keySet();
+        		List<Unit__c> unitListForUpdate = new List<Unit__c> ();
+
+            	/** Assign position in rating based on order in "allUnitsList". */
+                for (Integer i = 0; i < allUnitsList.size(); i++) {
+            		Unit__c temp = allUnitsList.get(i);
+            		temp.Position_in_rating__c = allUnitsList.size() - i;
+            		allUnitsList.set(i, temp);
+                            
+            		if (!keysSet.contains(temp.Id)) {
+                		unitListForUpdate.add(temp);
+            		}
+                }     
+        		update unitListForUpdate;				
+			}
+		}
+	}
+}

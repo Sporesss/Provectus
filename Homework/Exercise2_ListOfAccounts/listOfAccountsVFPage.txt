@@ -1,0 +1,27 @@
+<apex:page controller="controllerForlistOfAccounts2">
+    <apex:form >
+        <apex:pageBlock >           
+            <apex:pageBlockTable value="{!AccountList}" var="eachAccount">
+                <apex:column >
+                    <apex:inputCheckbox value="{!eachAccount.selected}"/>
+                </apex:column>
+                <apex:column value="{!eachAccount.acc.Name}" />
+                <apex:column value="{!eachAccount.acc.Industry}" />
+                <apex:column value="{!eachAccount.acc.Description}" />
+            </apex:pageBlockTable>
+                 <apex:commandButton action="{!processSelected}" value="Process Selected"/>       
+        </apex:pageBlock>
+    </apex:form>
+    <apex:pageBlock rendered="{!renderedFlag}" id="table">
+        <apex:form >
+            <apex:pageBlockSection >
+                <apex:pageBlockTable value="{!selectedObjects}" var="eachSelectedAccount">
+                    <apex:column >
+                        <apex:facet name="header">Selected accounts</apex:facet>
+                        <apex:outputField value="{!eachSelectedAccount.Name}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:form>
+    </apex:pageBlock>
+</apex:page>
